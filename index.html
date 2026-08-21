@@ -353,6 +353,15 @@
 
   footer{padding:30px 0 0; text-align:center;}
   footer p{font-family:var(--f-mono); font-size:11px; color:var(--dim);}
+
+  /* ---------- Toast (mail fallback feedback) ---------- */
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); z-index:200;
+    background:var(--panel); border:1px solid var(--hairline); color:var(--text); font-family:var(--f-mono);
+    font-size:12.5px; padding:12px 22px; border-radius:100px; box-shadow:0 14px 34px -10px rgba(0,0,0,0.55);
+    opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; white-space:nowrap;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
@@ -749,7 +758,7 @@
         </svg>
       </a>
       <div class="quick-chips">
-        <span class="quick-chip" data-subject="Discussing a DevOps / Cloud role" data-body="Hi Sefali, I'd like to discuss a DevOps / Cloud role with you.">I want to discuss a DevOps role</span>
+        <span class="quick-chip" data-subject="Discussing an AI / DevOps role" data-body="Hi Sefali, I'd like to discuss an AI / DevOps role with you.">I want to discuss an AI/DevOps role</span>
         <span class="quick-chip" data-subject="Quick introduction call" data-body="Hi Sefali, can we schedule a quick introduction call?">Schedule an intro call</span>
         <span class="quick-chip" data-subject="Requesting your latest resume" data-body="Hi Sefali, could you share your latest resume?">Request your resume</span>
       </div>
@@ -1041,12 +1050,53 @@
   }
   document.querySelectorAll('.count').forEach(el => animateCount(el));
 
-  /* ---------- Quick chips → prefilled mailto ---------- */
+  /* ---------- Toast + mailto helper (with clipboard fallback) ---------- */
+  const CONTACT_EMAIL = 'sefalisabnam026@gmail.com';
+
+  function showToast(msg){
+    let toast = document.getElementById('appToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'appToast';
+      toast.className = 'toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toast._hideTimer);
+    toast._hideTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+  }
+
+  function openMail(subject, body){
+    const params = [];
+    if (subject) params.push('subject=' + encodeURIComponent(subject));
+    if (body) params.push('body=' + encodeURIComponent(body));
+    const mailto = `mailto:${CONTACT_EMAIL}${params.length ? '?' + params.join('&') : ''}`;
+
+    // Attempt to launch the OS mail client.
+    window.location.href = mailto;
+
+    // Fallback: copy the address so there's always a usable result,
+    // even if no default mail app is configured on this device/browser.
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(CONTACT_EMAIL)
+        .then(() => showToast(`Opening your mail app… email copied too: ${CONTACT_EMAIL}`))
+        .catch(() => showToast(`Email: ${CONTACT_EMAIL}`));
+    } else {
+      showToast(`Email: ${CONTACT_EMAIL}`);
+    }
+  }
+
+  document.querySelectorAll('.mail-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openMail();
+    });
+  });
+
   document.querySelectorAll('.quick-chip').forEach(chip => {
     chip.addEventListener('click', () => {
-      const subject = encodeURIComponent(chip.dataset.subject || '');
-      const body = encodeURIComponent(chip.dataset.body || '');
-      window.location.href = `mailto:sefalisabnam026@gmail.com?subject=${subject}&body=${body}`;
+      openMail(chip.dataset.subject || '', chip.dataset.body || '');
     });
   });
 
