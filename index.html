@@ -96,9 +96,10 @@
   @media (max-width:900px){ .theme-toggle{right:16px; top:16px;} }
   .mini-avatar{
     width:54px; height:54px; border-radius:50%; overflow:hidden; flex-shrink:0;
-    box-shadow:0 10px 30px -10px rgba(177,123,255,.6); animation:avatarGlow 4s ease-in-out infinite;
+    box-shadow:0 10px 30px -10px rgba(177,123,255,.6); animation:avatarGlow 4s ease-in-out infinite, bob 6s ease-in-out infinite;
+    perspective:600px;
   }
-  .mini-avatar svg{width:100%; height:100%; display:block;}
+  .mini-avatar img{width:100%; height:100%; display:block; object-fit:cover; transform-style:preserve-3d; backface-visibility:hidden; will-change:transform;}
   @keyframes gradflow{0%{background-position:0% center;} 50%{background-position:100% center;} 100%{background-position:0% center;}}
 
   /* ---------- SIDE NAV ---------- */
@@ -143,12 +144,10 @@
   .me-hero{text-align:center; padding-top:10px;}
   .avatar-mono{
     width:112px; height:112px; border-radius:50%; margin:0 auto 26px; overflow:hidden;
-    animation:avatarGlow 4s ease-in-out infinite;
+    animation:avatarGlow 4s ease-in-out infinite, bob 6s ease-in-out infinite;
+    perspective:700px;
   }
-  .avatar-mono svg{width:100%; height:100%; display:block;}
-  .avatar-head{transform-box:fill-box; transform-origin:50% 60%; transition:transform 0.25s ease-out;}
-  .avatar-eyes{transform-box:fill-box; transform-origin:center; animation:blink 4.5s ease-in-out infinite;}
-  @keyframes blink{0%,92%,100%{transform:scaleY(1);} 95%{transform:scaleY(0.1);}}
+  .avatar-mono img{width:100%; height:100%; display:block; object-fit:cover; transform-style:preserve-3d; backface-visibility:hidden; will-change:transform; transition:filter .3s ease;}
   @keyframes avatarGlow{0%,100%{box-shadow:0 20px 50px -15px rgba(177,123,255,.55);} 50%{box-shadow:0 20px 60px -8px rgba(67,224,255,.6);}}
 
   .hero-name{
@@ -189,6 +188,7 @@
   @keyframes msgIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
   .ask-msg.user{flex-direction:row-reverse;}
   .ask-msg-avatar{width:26px; height:26px; border-radius:50%; overflow:hidden; flex-shrink:0; margin-top:2px;}
+  .ask-msg-avatar img{width:100%; height:100%; object-fit:cover; display:block;}
   .ask-msg.user .ask-msg-avatar{background:var(--grad); display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-size:10px; color:#0c0a1c; font-weight:700;}
   .ask-bubble{background:var(--panel); border:1px solid var(--hairline); border-radius:14px; padding:10px 14px; font-size:13.5px; color:var(--muted); max-width:78%; line-height:1.5;}
   .ask-msg.user .ask-bubble{background:var(--panel-2); color:var(--text);}
@@ -360,65 +360,8 @@
 <canvas id="bgCanvas"></canvas>
 <div class="noise-grid"></div>
 
-<!-- Shared girl-avatar icon definition, referenced via <use> -->
-<svg width="0" height="0" style="position:absolute">
-  <defs>
-    <g id="girlAvatar">
-      <linearGradient id="avatarBg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#ff7bd6"/>
-        <stop offset="0.55" stop-color="#b17bff"/>
-        <stop offset="1" stop-color="#43e0ff"/>
-      </linearGradient>
-      <circle cx="50" cy="50" r="50" fill="url(#avatarBg)"/>
-      <!-- collar / shoulders -->
-      <path d="M20 100c0-14 13-22 30-22s30 8 30 22Z" fill="#fdfdfd"/>
-      <path d="M32 82l6 10 4-6-6-8Zm36 0l-6 10-4-6 6-8Z" fill="#e7e7f0"/>
-      <!-- head-group: hair back + neck + face + features (rotates as one unit for the tilt effect) -->
-      <g class="avatar-head">
-        <!-- neck -->
-        <rect x="44" y="66" width="12" height="12" rx="4" fill="#f4c9a3"/>
-        <!-- hair back (top mass) -->
-        <path d="M50 16c-16 0-27 12-27 29 0 9 3 17 7 22 1-5 2-10 2-10s3 5 8 7c-1-4-1-9-1-9s5 4 11 4 11-4 11-4-0 5-1 9c6-2 8-7 8-7s1 5 2 10c4-5 7-13 7-22 0-17-11-29-27-29Z" fill="#6b4226"/>
-        <!-- face -->
-        <circle cx="50" cy="55" r="17.5" fill="#f4c9a3"/>
-        <!-- blush -->
-        <ellipse cx="40" cy="60" rx="3" ry="1.8" fill="#ff9ec7" opacity="0.55"/>
-        <ellipse cx="60" cy="60" rx="3" ry="1.8" fill="#ff9ec7" opacity="0.55"/>
-        <!-- long flowing side locks (past the shoulders) -->
-        <path d="M31 37c-8 6-12 16-11 28 1 11 4 20 9 27 1-5 1-10-1-15-3-8-4-15-3-22 1-8 3-13 6-18Z" fill="#6b4226"/>
-        <path d="M69 37c8 6 12 16 11 28-1 11-4 20-9 27-1-5-1-10 1-15 3-8 4-15 3-22-1-8-3-13-6-18Z" fill="#6b4226"/>
-        <path d="M31 37c-8 6-12 16-11 28 1 11 4 20 9 27 1-5 1-10-1-15-3-8-4-15-3-22 1-8 3-13 6-18Z" fill="#000" opacity="0.12"/>
-        <path d="M69 37c8 6 12 16 11 28-1 11-4 20-9 27-1-5-1-10 1-15 3-8 4-15 3-22-1-8-3-13-6-18Z" fill="#fff" opacity="0.06"/>
-        <!-- hair fringe -->
-        <path d="M34 48c2-9 8-15 16-15s14 6 16 15c-4-3-10-5-16-5s-12 2-16 5Z" fill="#6b4226"/>
-        <!-- hair strand highlights -->
-        <path d="M40 20q3 14 1 27" stroke="#8a5a35" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0.55"/>
-        <path d="M60 20q-3 14-1 27" stroke="#8a5a35" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0.55"/>
-        <!-- eyebrows -->
-        <path d="M41 51.5q3-2 6.5-1" stroke="#4a2c17" stroke-width="1.3" fill="none" stroke-linecap="round"/>
-        <path d="M52.5 50.5q3.5-1 6.5 1" stroke="#4a2c17" stroke-width="1.3" fill="none" stroke-linecap="round"/>
-        <!-- eyes (blink target) -->
-        <g class="avatar-eyes">
-          <circle cx="44" cy="55.5" r="2" fill="#241a3d"/>
-          <circle cx="56" cy="55.5" r="2" fill="#241a3d"/>
-        </g>
-        <!-- nose -->
-        <path d="M50 57.5q0.8 1.6 0 2.6" stroke="#d99f77" stroke-width="1" fill="none" stroke-linecap="round"/>
-        <!-- smile -->
-        <path d="M45.5 61.5q4.5 3.5 9 0" stroke="#a8563f" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <!-- earrings -->
-        <circle cx="33" cy="58" r="1.4" fill="#ff7bd6"/>
-        <circle cx="67" cy="58" r="1.4" fill="#ff7bd6"/>
-        <!-- bow -->
-        <path d="M64 30l5.5-3.5 1 4.5-5.5 3.5-1-4.5Zm-2.5 2.5l-5.5-3.5-1 4.5 5.5 3.5 1-4.5Z" fill="#ff7bd6"/>
-        <circle cx="63" cy="32" r="1.8" fill="#43e0ff"/>
-      </g>
-    </g>
-  </defs>
-</svg>
-
 <div class="top-bar">
-  <div class="mini-avatar"><svg viewBox="0 0 100 100"><use href="#girlAvatar"/></svg></div>
+  <div class="mini-avatar"><img src="sefali-photo.png" alt="Sefali Sharon Sabnam"></div>
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle theme">🌙</button>
 </div>
 
@@ -427,7 +370,7 @@
   <button data-target="page-experience"><span class="nav-ic">▤</span>Experience</button>
   <button data-target="page-skills"><span class="nav-ic">✦</span>Skills</button>
   <button data-target="page-projects"><span class="nav-ic">▣</span>Projects</button>
-  <button data-target="page-credentials"><span class="nav-ic">◆</span>Credentials</button>
+  <button data-target="page-credentials"><span class="nav-ic">◆</span>Certs &amp; Awards</button>
   <button data-target="page-contact"><span class="nav-ic">✉</span>Contact</button>
   <button data-target="page-resume"><span class="nav-ic">▦</span>Resume</button>
 </nav>
@@ -437,7 +380,7 @@
   <!-- ME -->
   <section class="page active" id="page-me">
     <div class="me-hero">
-      <div class="avatar-mono" id="avatarMono"><svg viewBox="0 0 100 100"><use href="#girlAvatar"/></svg></div>
+      <div class="avatar-mono" id="avatarMono"><img src="sefali-photo.png" alt="Sefali Sharon Sabnam"></div>
       <h1 class="hero-name" id="heroName" aria-label="Sefali Sharon Sabnam"></h1>
       <div class="hero-role">AI Hybrid Developer &amp; AI Prompt Engineer | DevOps &amp; Cloud</div>
 
@@ -1037,24 +980,23 @@
     requestAnimationFrame(drawWaves);
   }
 
-  /* ---------- Avatar heads tilt gently toward the cursor ---------- */
-  const avatarHeads = document.querySelectorAll('.avatar-head');
-  if (!prefersReduced && avatarHeads.length) {
+  /* ---------- Avatar photos tilt gently toward the cursor (3D card-tilt effect) ---------- */
+  const avatarPhotos = document.querySelectorAll('.avatar-mono img, .mini-avatar img');
+  if (!prefersReduced && avatarPhotos.length) {
     function tiltAvatars(){
-      avatarHeads.forEach(head => {
-        const svgEl = head.closest('svg');
-        if (!svgEl) return;
-        const rect = svgEl.getBoundingClientRect();
+      const reach = 240; // px — fixed reference distance, independent of avatar size
+      const maxTilt = 12; // degrees — hard ceiling, never enough to flip
+      avatarPhotos.forEach(img => {
+        const rect = img.getBoundingClientRect();
         if (rect.width === 0) return;
         const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
         const dx = mx - cx, dy = my - cy;
         const dist = Math.hypot(dx, dy);
-        const maxTilt = 9;
         const influence = Math.min(1, 260 / Math.max(dist, 40));
-        const angle = Math.atan2(dy, dx);
-        const rot = Math.cos(angle) * maxTilt * influence;
-        const rise = Math.max(-4, Math.min(4, -Math.sin(angle) * 3 * influence));
-        head.style.transform = `translateY(${rise}px) rotate(${rot}deg)`;
+        const rotY = Math.max(-maxTilt, Math.min(maxTilt, (dx / reach) * maxTilt * influence));
+        const rotX = Math.max(-maxTilt, Math.min(maxTilt, -(dy / reach) * maxTilt * influence));
+        const scale = 1 + influence * 0.04;
+        img.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg) scale(${scale})`;
       });
       requestAnimationFrame(tiltAvatars);
     }
@@ -1139,7 +1081,7 @@
     const avatar = document.createElement('div');
     avatar.className = 'ask-msg-avatar';
     if (who === 'bot') {
-      avatar.innerHTML = '<svg viewBox="0 0 100 100"><use href="#girlAvatar"/></svg>';
+      avatar.innerHTML = '<img src="sefali-photo.png" alt="Sefali">';
     } else {
       avatar.textContent = 'You';
     }
