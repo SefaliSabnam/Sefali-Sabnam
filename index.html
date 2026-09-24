@@ -121,7 +121,7 @@ main, .side-nav, .top-bar{position:relative; z-index:1;}
 }
 
 .mini-avatar{
-  width:54px; height:54px; border-radius:50%; overflow:hidden; flex-shrink:0;
+  width:54px; height:54px; border-radius:50%; overflow:hidden; flex-shrink:0; cursor:pointer;
   box-shadow:0 10px 30px -10px rgba(177,123,255,.6); animation:avatarGlow 4s ease-in-out infinite, bob 6s ease-in-out infinite;
   perspective:600px;
 }
@@ -454,12 +454,12 @@ footer p{font-family:var(--f-mono); font-size:11px; color:var(--dim);}
       <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="pb-label">Music</span>
     </button>
   </div>
-  <div class="mini-avatar"><img src="sefali-photo.png" alt="Sefali Sharon Sabnam"></div>
+  <div class="mini-avatar" id="homeAvatar" role="button" tabindex="0" aria-label="Back to home" title="Back to home"><img src="sefali-photo.png" alt="Sefali Sharon Sabnam"></div>
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle theme">🌙</button>
 </div>
 
 <nav class="side-nav" id="sideNav">
-  <button data-target="page-me" class="active"><span class="nav-ic">◎</span>Me</button>
+  <button data-target="page-me"><span class="nav-ic">◎</span>Me</button>
   <button data-target="page-experience"><span class="nav-ic">▤</span>Experience</button>
   <button data-target="page-skills"><span class="nav-ic">✦</span>Skills</button>
   <button data-target="page-projects"><span class="nav-ic">▣</span>Projects</button>
@@ -470,8 +470,8 @@ footer p{font-family:var(--f-mono); font-size:11px; color:var(--dim);}
 
 <main class="wrap">
 
-  <!-- ME -->
-  <section class="page active" id="page-me">
+  <!-- LANDING (welcome page) -->
+  <section class="page active" id="page-landing">
     <div class="me-hero">
       <div class="avatar-mono" id="avatarMono"><img src="sefali-photo.png" alt="Sefali Sharon Sabnam"></div>
       <h1 class="hero-name" id="heroName" aria-label="Sefali Sharon Sabnam"></h1>
@@ -497,38 +497,54 @@ footer p{font-family:var(--f-mono); font-size:11px; color:var(--dim);}
         <span class="id-tag">Cloud</span><span class="id-tag">Prompt Engineering</span><span class="id-tag">AI ALIA</span>
       </div>
 
-      <div class="profile-card">
-        <div class="profile-photo"><img src="sefali-profile.jpg" alt="Sefali Sharon Sabnam"></div>
-        <div>
-          <div class="profile-name">Sefali <span>Sharon Sabnam</span></div>
-          <div class="profile-meta">2.5 years experience · Bengaluru, India</div>
-          <div class="profile-tags">
-            <span>AI</span><span>Developer</span><span>DevOps</span><span>Cloud</span><span>Prompt Engineering</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="bio-text">
-        <p>Hey <span class="wave">👋</span></p>
-        <p>I'm Sefali — an <strong>AI Hybrid Developer, AI Prompt Engineer, and DevOps-trained engineer</strong> based in Bengaluru. I work on Generative AI prompt engineering, LLM evaluation and benchmarking, and AI-powered automation, alongside AWS, Kubernetes, Docker, and Terraform-based cloud architecture and CI/CD automation with Jenkins. I enjoy combining AI and cloud technologies to build reliable, well-documented solutions under tight deadlines.</p>
-      </div>
-
       <div class="hero-actions">
-        <button class="btn btn-primary" data-target="page-projects">View projects →</button>
+        <button class="btn btn-primary" data-target="page-me">More about me →</button>
+        <button class="btn btn-ghost" data-target="page-projects">View projects</button>
         <button class="btn btn-ghost" data-target="page-resume">View resume</button>
         <button class="btn btn-ghost" data-target="page-contact">Contact me</button>
       </div>
+    </div>
+  </section>
 
-      <div class="snapshot-panel">
-        <span class="kicker">✦ Professional Snapshot</span>
-        <p>I'm <strong>Sefali Sharon Sabnam</strong>, an AI Hybrid Developer and AI Prompt Engineer with hands-on experience in Generative AI prompt engineering, LLM evaluation and benchmarking, and evaluation frameworks. I'm DevOps-trained in AWS, Kubernetes, Docker, and Terraform-based cloud architecture and CI/CD automation with Jenkins. I also have basic, project-level exposure to C#, .NET, and SQL Server through personal desktop applications, and I deliver reliable, well-documented results under tight deadlines.</p>
-      </div>
+  <!-- ME (profile page) -->
+  <section class="page" id="page-me">
+    <div class="page-head">
+      <span class="kicker">Me</span>
+      <h2>Nice to meet you.</h2>
+      <p class="section-sub">A closer look at who I am and what I do.</p>
+    </div>
 
-      <div class="float-stats">
-        <div class="fstat"><div class="fstat-num"><span class="count" data-target-num="2.5" data-suffix=" yrs">0</span></div><div class="fstat-label">total experience</div></div>
-        <div class="fstat"><div class="fstat-num"><span class="count" data-target-num="6" data-suffix="">0</span></div><div class="fstat-label">projects built</div></div>
-        <div class="fstat"><div class="fstat-num"><span class="count" data-target-num="8" data-suffix="">0</span></div><div class="fstat-label">certifications</div></div>
+    <div class="profile-card">
+      <div class="profile-photo"><img src="sefali-profile.jpg" alt="Sefali Sharon Sabnam"></div>
+      <div>
+        <div class="profile-name">Sefali <span>Sharon Sabnam</span></div>
+        <div class="profile-meta">2.5 years experience · Bengaluru, India</div>
+        <div class="profile-tags">
+          <span>AI</span><span>Developer</span><span>DevOps</span><span>Cloud</span><span>Prompt Engineering</span>
+        </div>
       </div>
+    </div>
+
+    <div class="bio-text">
+      <p>Hey <span class="wave">👋</span></p>
+      <p>I'm Sefali — an <strong>AI Hybrid Developer, AI Prompt Engineer, and DevOps-trained engineer</strong> based in Bengaluru. I work on Generative AI prompt engineering, LLM evaluation and benchmarking, and AI-powered automation, alongside AWS, Kubernetes, Docker, and Terraform-based cloud architecture and CI/CD automation with Jenkins. I enjoy combining AI and cloud technologies to build reliable, well-documented solutions under tight deadlines.</p>
+    </div>
+
+    <div class="snapshot-panel">
+      <span class="kicker">✦ Professional Snapshot</span>
+      <p>I'm <strong>Sefali Sharon Sabnam</strong>, an AI Hybrid Developer and AI Prompt Engineer with hands-on experience in Generative AI prompt engineering, LLM evaluation and benchmarking, and evaluation frameworks. I'm DevOps-trained in AWS, Kubernetes, Docker, and Terraform-based cloud architecture and CI/CD automation with Jenkins. I also have basic, project-level exposure to C#, .NET, and SQL Server through personal desktop applications, and I deliver reliable, well-documented results under tight deadlines.</p>
+    </div>
+
+    <div class="float-stats">
+      <div class="fstat"><div class="fstat-num"><span class="count" data-target-num="2.5" data-suffix=" yrs">0</span></div><div class="fstat-label">total experience</div></div>
+      <div class="fstat"><div class="fstat-num"><span class="count" data-target-num="6" data-suffix="">0</span></div><div class="fstat-label">projects built</div></div>
+      <div class="fstat"><div class="fstat-num"><span class="count" data-target-num="8" data-suffix="">0</span></div><div class="fstat-label">certifications</div></div>
+    </div>
+
+    <div class="hero-actions">
+      <button class="btn btn-ghost" data-target="page-experience">Career journey →</button>
+      <button class="btn btn-ghost" data-target="page-projects">Projects</button>
+      <button class="btn btn-ghost" data-target="page-contact">Contact</button>
     </div>
   </section>
 
@@ -1028,6 +1044,11 @@ const initialHash = location.hash.replace('#','');
 if (initialHash && document.getElementById('page-' + initialHash)) {
   goToPage('page-' + initialHash);
 }
+
+/* ---------- Home (mini avatar in top bar) ---------- */
+const homeAvatar = document.getElementById('homeAvatar');
+homeAvatar.addEventListener('click', () => goToPage('page-landing'));
+homeAvatar.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goToPage('page-landing'); } });
 
 /* ---------- Animated hero name ---------- */
 const heroName = document.getElementById('heroName');
